@@ -129,7 +129,7 @@ export function useGestureRecognition(
               if (result.name !== lastGestureRef.current) {
                 lastGestureRef.current = result.name;
                 setCurrentGesture(result.name);
-                speak(result.name);
+                setSentence((prev) => [...prev, result.name]);
                 setHistory((prev) => [
                   { gesture: result.name, timestamp: new Date() },
                   ...prev.slice(0, 19),
