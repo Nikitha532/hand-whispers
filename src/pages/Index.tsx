@@ -2,20 +2,21 @@ import { useCamera } from "@/hooks/useCamera";
 import { useGestureRecognition } from "@/hooks/useGestureRecognition";
 import { AppHeader } from "@/components/AppHeader";
 import { CameraFeed } from "@/components/CameraFeed";
-import { HistorySidebar } from "@/components/HistorySidebar";
+import { GestureGuide } from "@/components/GestureGuide";
 
 const Index = () => {
   const { videoRef, status: cameraStatus, isPaused, togglePause } = useCamera();
-  const { currentGesture, confidence, history, detectionStatus } =
+  const { currentGesture, confidence, detectionStatus } =
     useGestureRecognition(videoRef, cameraStatus === "ready" && !isPaused);
 
   return (
-    <div className="grid h-[100svh] grid-cols-1 grid-rows-[60px_1fr] gap-4 p-4 lg:grid-cols-[1fr_320px]">
-      <AppHeader cameraStatus={cameraStatus} detectionStatus={detectionStatus} />
-      
-      <div className="hidden lg:block" /> {/* Header spacer for sidebar column */}
+    <div className="flex h-[100svh] flex-col gap-4 p-4">
+      <div className="flex items-center justify-between">
+        <AppHeader cameraStatus={cameraStatus} detectionStatus={detectionStatus} />
+        <GestureGuide />
+      </div>
 
-      <main className="min-h-0 overflow-hidden">
+      <main className="min-h-0 flex-1 overflow-hidden">
         <CameraFeed
           ref={videoRef}
           gesture={currentGesture}
@@ -25,10 +26,6 @@ const Index = () => {
           cameraStatus={cameraStatus}
         />
       </main>
-
-      <aside className="hidden min-h-0 lg:flex">
-        <HistorySidebar history={history} />
-      </aside>
     </div>
   );
 };
