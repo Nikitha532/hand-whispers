@@ -3,10 +3,11 @@ import { useGestureRecognition } from "@/hooks/useGestureRecognition";
 import { AppHeader } from "@/components/AppHeader";
 import { CameraFeed } from "@/components/CameraFeed";
 import { GestureGuide } from "@/components/GestureGuide";
+import { SentenceBar } from "@/components/SentenceBar";
 
 const Index = () => {
   const { videoRef, status: cameraStatus, isPaused, togglePause } = useCamera();
-  const { currentGesture, confidence, detectionStatus } =
+  const { currentGesture, confidence, detectionStatus, sentence, speakSentence, clearSentence } =
     useGestureRecognition(videoRef, cameraStatus === "ready" && !isPaused);
 
   return (
@@ -26,6 +27,8 @@ const Index = () => {
           cameraStatus={cameraStatus}
         />
       </main>
+
+      <SentenceBar words={sentence} onSpeak={speakSentence} onClear={clearSentence} />
     </div>
   );
 };

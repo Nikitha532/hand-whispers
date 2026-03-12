@@ -24,6 +24,9 @@ export interface GestureResult {
   gesture: string | null;
   confidence: number;
   history: Array<{ gesture: string; timestamp: Date }>;
+  sentence: string[];
+  speakSentence: () => void;
+  clearSentence: () => void;
 }
 
 export function useGestureRecognition(
@@ -33,22 +36,26 @@ export function useGestureRecognition(
   const [currentGesture, setCurrentGesture] = useState<string | null>(null);
   const [confidence, setConfidence] = useState(0);
   const [history, setHistory] = useState<Array<{ gesture: string; timestamp: Date }>>([]);
+  const [sentence, setSentence] = useState<string[]>([]);
   const [detectionStatus, setDetectionStatus] = useState<"idle" | "detecting" | "recognized">("idle");
   const handsRef = useRef<any>(null);
   const cameraRef = useRef<any>(null);
   const lastGestureRef = useRef<string | null>(null);
   const gestureTimeoutRef = useRef<ReturnType<typeof setTimeout>>();
-  const lastSpokenRef = useRef<string | null>(null);
 
-  const speak = useCallback((text: string) => {
-    if (!window.speechSynthesis || text === lastSpokenRef.current) return;
+  const speakSentence = useCallback(() => {
+    if (!window.speechSynthesis || sentence.length === 0) return;
     window.speechSynthesis.cancel();
+    const text = sentence.join(" ");
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.rate = 1;
     utterance.pitch = 1;
     utterance.volume = 1;
-    lastSpokenRef.current = text;
     window.speechSynthesis.speak(utterance);
+  }, [sentence]);
+
+  const clearSentence = useCallback(() => {
+    setSentence([]);
   }, []);
 
   const classifyGesture = useCallback((landmarks: any[]): { name: string; confidence: number } | null => {
@@ -122,7 +129,7 @@ export function useGestureRecognition(
               if (result.name !== lastGestureRef.current) {
                 lastGestureRef.current = result.name;
                 setCurrentGesture(result.name);
-                speak(result.name);
+                setSentence((prev) => [...prev, result.name]);
                 setHistory((prev) => [
                   { gesture: result.name, timestamp: new Date() },
                   ...prev.slice(0, 19),
@@ -137,7 +144,6 @@ export function useGestureRecognition(
                 setCurrentGesture(null);
                 setDetectionStatus("idle");
                 lastGestureRef.current = null;
-                lastSpokenRef.current = null;
               }, 3000);
             }
           } else {
@@ -149,7 +155,6 @@ export function useGestureRecognition(
                setCurrentGesture(null);
                setDetectionStatus("idle");
                lastGestureRef.current = null;
-               lastSpokenRef.current = null;
              }, 1500);
            }
          });
@@ -183,7 +188,7 @@ export function useGestureRecognition(
       cameraRef.current = null;
       handsRef.current = null;
     };
-  }, [isReady, videoRef, classifyGesture, speak]);
+  }, [isReady, videoRef, classifyGesture]);
 
-  return { currentGesture, confidence, history, detectionStatus };
+  return { currentGesture, confidence, history, detectionStatus, sentence, speakSentence, clearSentence };
 }
