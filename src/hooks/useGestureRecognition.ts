@@ -188,7 +188,7 @@ export function useGestureRecognition(
       cameraRef.current = null;
       handsRef.current = null;
     };
-  }, [isReady, videoRef, classifyGesture, speak]);
+  }, [isReady, videoRef, classifyGesture]);
 
-  return { currentGesture, confidence, history, detectionStatus };
+  return { currentGesture, confidence, history, detectionStatus, sentence, speakSentence, clearSentence };
 }
