@@ -144,7 +144,6 @@ export function useGestureRecognition(
                 setCurrentGesture(null);
                 setDetectionStatus("idle");
                 lastGestureRef.current = null;
-                lastSpokenRef.current = null;
               }, 3000);
             }
           } else {
