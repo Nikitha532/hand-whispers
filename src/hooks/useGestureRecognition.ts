@@ -174,7 +174,7 @@ export function useGestureRecognition(
       cameraRef.current?.stop();
       handsRef.current?.close();
     };
-  }, [isReady, videoRef, classifyGesture]);
+  }, [isReady, videoRef, classifyGesture, speak]);
 
   return { currentGesture, confidence, history, detectionStatus };
 }
