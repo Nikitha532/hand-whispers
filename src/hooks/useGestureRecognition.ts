@@ -171,8 +171,10 @@ export function useGestureRecognition(
     return () => {
       cancelled = true;
       if (gestureTimeoutRef.current) clearTimeout(gestureTimeoutRef.current);
-      cameraRef.current?.stop();
-      handsRef.current?.close();
+      try { cameraRef.current?.stop(); } catch (_) {}
+      try { handsRef.current?.close(); } catch (_) {}
+      cameraRef.current = null;
+      handsRef.current = null;
     };
   }, [isReady, videoRef, classifyGesture, speak]);
 
