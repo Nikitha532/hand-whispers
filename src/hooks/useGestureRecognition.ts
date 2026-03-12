@@ -31,6 +31,18 @@ export function useGestureRecognition(
   const cameraRef = useRef<any>(null);
   const lastGestureRef = useRef<string | null>(null);
   const gestureTimeoutRef = useRef<ReturnType<typeof setTimeout>>();
+  const lastSpokenRef = useRef<string | null>(null);
+
+  const speak = useCallback((text: string) => {
+    if (!window.speechSynthesis || text === lastSpokenRef.current) return;
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.rate = 1;
+    utterance.pitch = 1;
+    utterance.volume = 1;
+    lastSpokenRef.current = text;
+    window.speechSynthesis.speak(utterance);
+  }, []);
 
   const classifyGesture = useCallback((landmarks: any[]): { name: string; confidence: number } | null => {
     if (!landmarks || landmarks.length < 21) return null;
