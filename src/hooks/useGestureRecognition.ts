@@ -24,6 +24,9 @@ export interface GestureResult {
   gesture: string | null;
   confidence: number;
   history: Array<{ gesture: string; timestamp: Date }>;
+  sentence: string[];
+  speakSentence: () => void;
+  clearSentence: () => void;
 }
 
 export function useGestureRecognition(
