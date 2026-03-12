@@ -137,13 +137,14 @@ export function useGestureRecognition(
             if (gestureTimeoutRef.current) {
               clearTimeout(gestureTimeoutRef.current);
             }
-            gestureTimeoutRef.current = setTimeout(() => {
-              setCurrentGesture(null);
-              setDetectionStatus("idle");
-              lastGestureRef.current = null;
-            }, 1500);
-          }
-        });
+             gestureTimeoutRef.current = setTimeout(() => {
+               setCurrentGesture(null);
+               setDetectionStatus("idle");
+               lastGestureRef.current = null;
+               lastSpokenRef.current = null;
+             }, 1500);
+           }
+         });
 
         handsRef.current = hands;
 
