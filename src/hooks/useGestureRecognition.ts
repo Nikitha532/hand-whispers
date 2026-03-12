@@ -3,14 +3,21 @@ import { useEffect, useRef, useState, useCallback } from "react";
 // Predefined gestures mapped to finger states
 // Each gesture: [thumb, index, middle, ring, pinky] — true = extended
 const GESTURES: Record<string, boolean[]> = {
-  Hello: [true, true, true, true, true],     // Open hand
-  Yes: [false, false, false, false, false],   // Fist (thumbs up approximated)
-  No: [true, true, false, false, false],      // Peace/no approximation
-  "Thank You": [true, true, true, false, false],
-  Stop: [true, true, true, true, true],       // Same as hello, differentiated by motion later
-  "I Love You": [true, true, false, false, true],
-  OK: [true, false, true, true, true],        // OK sign approximation
-  Peace: [false, true, true, false, false],
+  Hello: [true, true, true, true, true],           // Open hand
+  Yes: [false, false, false, false, false],         // Fist / thumbs up approx
+  No: [true, true, false, false, false],            // Thumb + index
+  "Thank You": [true, true, true, false, false],    // Thumb + index + middle
+  "I Love You": [true, true, false, false, true],   // Thumb + index + pinky
+  OK: [true, false, true, true, true],              // OK ring sign
+  Peace: [false, true, true, false, false],          // V sign
+  "Rock On": [false, true, false, false, true],     // Index + pinky (horns)
+  "Thumbs Up": [true, false, false, false, false],  // Only thumb extended
+  "Call Me": [true, false, false, false, true],      // Thumb + pinky (phone)
+  Point: [false, true, false, false, false],         // Index finger only
+  Three: [false, true, true, true, false],           // Index + middle + ring
+  Four: [false, true, true, true, true],             // All except thumb
+  Wait: [true, true, true, true, false],             // All except pinky
+  "Good Luck": [false, false, true, false, false],   // Middle finger only (crossed fingers approx)
 };
 
 export interface GestureResult {
